@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenith Encoder and Decoder</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #181818;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #f0f0f0;
+    }
+    .container {
+      background-color: #2e2e2e;
+      padding: 30px 40px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #58a6ff;
+    }
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      border-bottom: 2px solid #444;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 18px;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      transition: background-color 0.3s, border 0.3s;
+    }
+    .tab:hover {
+      background-color: #444;
+      border-color: #58a6ff;
+    }
+    .tab.active {
+      background-color: #333;
+      border-color: #58a6ff;
+    }
+    .content {
+      display: none;
+    }
+    .content.active {
+      display: block;
+    }
+    input[type="file"] {
+      background-color: #444;
+      color: #f0f0f0;
+      border: 1px solid #555;
+      padding: 12px;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 16px;
+      margin-bottom: 20px;
+      transition: background-color 0.3s;
+    }
+    input[type="file"]:hover {
+      background-color: #333;
+    }
+    button {
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #58a6ff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #3c8db4;
+    }
+    p {
+      color: #ccc;
+      font-size: 14px;
+    }
+    audio {
+      margin-top: 20px;
+      width: 100%;
+      border-radius: 8px;
+    }
+    a {
+      color: #58a6ff;
+      font-size: 16px;
+      text-decoration: none;
+      margin-top: 20px;
+      display: inline-block;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Zenith Encoder and Decoder</h1>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(0)">Encoder</div>
+      <div class="tab" onclick="switchTab(1)">Decoder</div>
+    </div>
+
+    <!-- Encoder Content -->
+    <div class="content active" id="encoderContent">
+      <p>Upload an MP3 file to encode it into Zenith format (.zth).</p>
+      <input type="file" id="fileInputEncoder" accept=".mp3" />
+      <button onclick="encodeToZenith()">Encode to Zenith</button>
+      <p id="statusEncoder"></p>
+      <a id="downloadLinkEncoder" style="display:none;" href="#">Download .zth file</a>
+    </div>
+
+    <!-- Decoder Content -->
+    <div class="content" id="decoderContent">
+      <p>Upload a Zenith (.zth) file to decode and play the audio directly in your browser.</p>
+      <input type="file" id="fileInputDecoder" accept=".zth" />
+      <button onclick="decodeAndPlayFile()">Decode and Play</button>
+      <audio id="audioPlayer" controls></audio>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabIndex) {
+      // Toggle tab visibility
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.content');
+
+      tabs.forEach((tab, index) => {
+        tab.classList.toggle('active', index === tabIndex);
+      });
+
+      contents.forEach((content, index) => {
+        content.classList.toggle('active', index === tabIndex);
+      });
+    }
+
+    // Encoder Functionality
+    function encodeToZenith() {
+      const fileInput = document.getElementById('fileInputEncoder');
+      const file = fileInput.files[0];
+      const status = document.getElementById('statusEncoder');
+      const downloadLink = document.getElementById('downloadLinkEncoder');
+
+      if (!file) {
+        alert("Please upload an MP3 file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const mp3Data = event.target.result;
+        console.log("MP3 file read successfully.");
+
+        // Apply custom encoding (e.g., XOR encryption) to the MP3 data
+        const encodedData = customEncode(new Uint8Array(mp3Data));
+        console.log("MP3 data encoded.");
+
+        // Create a Blob from the encoded data and generate a URL
+        const encodedBlob = new Blob([encodedData], { type: 'application/octet-stream' });
+        const encodedUrl = URL.createObjectURL(encodedBlob);
+
+        // Show the download link
+        downloadLink.href = encodedUrl;
+        downloadLink.style.display = 'block';
+        downloadLink.download = 'output.zth';
+        status.textContent = "Encoding complete! Click to download the .zth file.";
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    function customEncode(data) {
+      console.log("Applying custom encoding...");
+      let encoded = new Uint8Array(data);
+      for (let i = 0; i < encoded.length; i++) {
+        encoded[i] = encoded[i] ^ 0xFF; // Simple XOR encryption (example)
+      }
+      return encoded;
+    }
+
+    // Decoder Functionality
+    function decodeAndPlayFile() {
+      const fileInput = document.getElementById('fileInputDecoder');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Please upload a .zth file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const zthData = event.target.result;
+        console.log("File data read successfully.");
+
+        // Reverse the custom encoding (e.g., XOR decryption)
+        const decodedData = reverseCustomEncoding(new Uint8Array(zthData));
+        console.log("Decoded data:", decodedData);
+
+        // Create a Blob from the decoded data and convert it into a URL for the audio element
+        const audioBlob = new Blob([decodedData], { type: 'audio/mpeg' });
+
+        // Set the source of the audio element and play the audio
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audioPlayer = document.getElementById('audioPlayer');
+        audioPlayer.src = audioUrl;
+        audioPlayer.play().catch((error) => {
+          console.error("Error playing audio:", error);
+          alert("Failed to play the audio.");
+        });
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    function reverseCustomEncoding(encodedData) {
+      console.log("Reversing custom encoding...");
+      let decoded = new Uint8Array(encodedData);
+      for (let i = 0; i < decoded.length; i++) {
+        decoded[i] = decoded[i] ^ 0xFF; // XOR decryption (just an example)
+      }
+      console.log("Custom encoding reversed:", decoded);
+      return decoded;
+    }
+  </script>
+
+</body>
+</html>
