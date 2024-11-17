@@ -1,6 +1,6 @@
 # Zenith Encoder and Decoder
 
-[Zenith Encoder and Decoder Tool](https://github.com/yourusername/zenith-encoder-decoder) - A web-based tool for encoding and decoding Zenith audio files.
+[Zenith Encoder and Decoder Tool]([https://github.com/yourusername/zenith-encoder-decoder](https://htmlpreview.github.io/?https://github.com/mateo-cogeanu/Zenith/blob/main/Zenith_encoder_decoder.html)) - A web-based tool for encoding and decoding Zenith audio files.
 
 ## Description
 
