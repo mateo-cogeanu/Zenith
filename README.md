@@ -34,7 +34,7 @@ Zenith Encoder and Decoder is a simple, web-based tool that allows users to uplo
 
 ## Installation
 
-To use the Zenith Encoder and Decoder tool, simply visit the [Zenith Encoder and Decoder page](https://github.com/yourusername/zenith-encoder-decoder) and open the `index.html` file in your browser.
+To use the Zenith Encoder and Decoder tool, simply visit the [Zenith Encoder and Decoder page](https://htmlpreview.github.io/?https://github.com/mateo-cogeanu/Zenith/blob/main/Zenith_encoder_decoder.html) and use it
 
 ## Contributing
 
@@ -42,7 +42,7 @@ Feel free to fork the repository, make changes, and create pull requests. Contri
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache 2.0 License
 
 ## Acknowledgements
 
